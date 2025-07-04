@@ -33,4 +33,8 @@ app.post('/login/oauth2/token', express.urlencoded({ extended: true }), (req, re
     });
 });
 
-app.listen(port, () => console.log(`✅ Proxy público ouvindo na porta ${port}`));
+//app.listen(port, () => console.log(`✅ Proxy público ouvindo na porta ${port}`));
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`✅ Proxy ouvindo em http://0.0.0.0:${port}`);
+});
