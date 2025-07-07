@@ -1,23 +1,24 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Captura todos os GETs iniciando com /login
-app.get(/^\/login/, (req, res) => {
+// Rota GET para interceptar o login e adicionar o parâmetro lang=pt-BR
+app.get('/login*', (req, res) => {
   const queryParams = req.originalUrl.split('?')[1];
-  if (!queryParams) return res.status(400).send('❌ Falta parâmetros.');
-  const cognitoBase = 'https://us-east-1tdcs53wtg.auth.us-east-1.amazoncognito.com';
-  const redirectUrl = `${cognitoBase}/login?lang=pt-BR&${queryParams}`;
-  console.log('🔁 GET ->', redirectUrl);
-  return res.redirect(302, redirectUrl);
+  const cognitoBaseUrl = 'https://us-east-1tdcs53wtg.auth.us-east-1.amazoncognito.com/login';
+  const redirectUrl = `${cognitoBaseUrl}?lang=pt-BR&${queryParams}`;
+
+  console.log('🔁 Redirecionando para Cognito com URL completa:');
+  console.log(redirectUrl);
+
+  res.redirect(302, redirectUrl);
 });
 
-// Captura POSTs para /login/oauth2/token e repassa ao Cognito
+// Rota POST para repassar o token do Cognito ao AppSheet
 app.post('/login/oauth2/token', express.urlencoded({ extended: true }), (req, res) => {
   const url = 'https://us-east-1tdcs53wtg.auth.us-east-1.amazoncognito.com/login/oauth2/token';
   console.log('🔁 POST -> Proxy token request to Cognito');
 
-  const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+  const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 
   fetch(url, {
     method: 'POST',
@@ -33,8 +34,8 @@ app.post('/login/oauth2/token', express.urlencoded({ extended: true }), (req, re
     });
 });
 
-//app.listen(port, () => console.log(`✅ Proxy público ouvindo na porta ${port}`));
-
+// Inicia o servidor (funciona local e Railway)
+const port = process.env.PORT || 3000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`✅ Proxy ouvindo em http://0.0.0.0:${port}`);
 });
