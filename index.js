@@ -19,8 +19,29 @@ app.get(/^\/login/, (req, res) => {
   res.redirect(302, redirectUrl);
 });
 
+// Rota POST para repassar o token do Cognito ao AppSheet
+app.post('/login/oauth2/token', express.urlencoded({ extended: true }), (req, res) => {
+  const url = 'https://us-east-1tdcs53wtg.auth.us-east-1.amazoncognito.com/login/oauth2/token';
+  console.log('🔁 POST -> Proxy token request to Cognito');
 
+  const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 
-app.listen(port, () => {
-  console.log(`✅ Proxy ouvindo em http://localhost:${port}`);
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(req.body)
+  })
+    .then(r => r.text().then(text => {
+      res.status(r.status).set(Object.fromEntries(r.headers.entries())).send(text);
+    }))
+    .catch(err => {
+      console.error('❗ Proxy token error: ', err);
+      res.status(500).send('Proxy error');
+    });
+});
+
+// 3. inicia o servidor corretamente
+const port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`✅ Proxy ouvindo em http://0.0.0.0:${port}`);
 });
