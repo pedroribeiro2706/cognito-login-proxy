@@ -1,3 +1,5 @@
+console.log("=== index.js START ===");
+
 const express = require('express');
 const app = express();
 const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
