@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 
 // Captura qualquer rota que comece com /login
 app.get(/^\/login/, (req, res) => {
