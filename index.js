@@ -19,7 +19,11 @@ app.get(/^\/login/, (req, res) => {
 });
 
 // 3. inicia o servidor corretamente
-const port = process.env.PORT || 3000;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`✅ Proxy ouvindo em http://0.0.0.0:${port}`);
+// const port = process.env.PORT || 3000;
+// app.listen(port, "0.0.0.0", () => {
+//     console.log(`✅ Proxy ouvindo em http://0.0.0.0:${port}`);
+// });
+
+app.listen(port, () => {
+    console.log(`✅ Proxy ouvindo em http://localhost:${port}`);
 });
