@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 
-// Rota GET para interceptar o login e adicionar o parâmetro lang=pt-BR
-app.get('/login*', (req, res) => {
+// Rota GET com expressão regular para capturar todas as variações de /login
+app.get(/^\/login(?:\/.*)?$/, (req, res) => {
   const queryParams = req.originalUrl.split('?')[1];
   const cognitoBaseUrl = 'https://us-east-1tdcs53wtg.auth.us-east-1.amazoncognito.com/login';
   const redirectUrl = `${cognitoBaseUrl}?lang=pt-BR&${queryParams}`;
