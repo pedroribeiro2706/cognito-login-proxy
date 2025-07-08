@@ -19,11 +19,6 @@ app.get(/^\/login/, (req, res) => {
   res.redirect(302, redirectUrl);
 });
 
-app.post('/login/oauth2/token', async (req, res) => {
-    console.log('POST /login/oauth2/token:', req.body);
-    res.send('token route hit (simulado para debug)');
-});
-
 // app.listen(port, () => {
 //   console.log(`✅ Proxy ouvindo em http://localhost:${port}`);
 // });
