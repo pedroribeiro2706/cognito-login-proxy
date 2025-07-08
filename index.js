@@ -19,6 +19,10 @@ app.get(/^\/login/, (req, res) => {
   res.redirect(302, redirectUrl);
 });
 
-app.listen(port, () => {
-  console.log(`✅ Proxy ouvindo em http://localhost:${port}`);
+// app.listen(port, () => {
+//   console.log(`✅ Proxy ouvindo em http://localhost:${port}`);
+// });
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`✅ Proxy rodando em 0.0.0.0:${port}`);
 });
